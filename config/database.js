@@ -1,5 +1,5 @@
 require("dotenv").config();
-const env = env;
+const env = process.env;
 
 const development = {
   username: env.USER_NAME,

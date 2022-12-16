@@ -1,11 +1,13 @@
 const express = require('express');
-const Sequelize = require('sequelize');
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const cors = require("cors");
+const sequelize = require("./models/index.js").sequelize;
 require("dotenv").config();
 
 const app = express();
+
+sequelize.sync();
 
 app.use(logger("dev"));
 app.use(express.json());

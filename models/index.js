@@ -20,7 +20,7 @@ db.Sequelize = Sequelize;
 db.Post = require("./post")(sequelize, Sequelize);
 db.Member = require("./member")(sequelize, Sequelize);
 
-db.Member.hasMany(db.Post, {foreignKey:'member_id', sourceKey: 'member_id'});
-db.Post.belongsTo(db.Member, {foreignKey:'member_id', sourceKey: 'member_id'});
+db.Member.hasMany(db.Post);
+db.Post.belongsTo(db.Member);
 
 module.exports = db;

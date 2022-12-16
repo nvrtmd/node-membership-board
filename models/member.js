@@ -1,15 +1,15 @@
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define("member", {
-    user_id: {
+    member_id: {
       type: DataTypes.STRING(100),
-      allowNull: false,
-      unique: true
-    },
-    user_nickname: {
-      type: DataTypes.STRING(100),
+      unique: true,
       allowNull: false,
     },
-    user_password: {
+    member_password: {
+      type: DataTypes.STRING(100),
+      allowNull: false,
+    },
+    member_name: {
       type: DataTypes.STRING(100),
       allowNull: false,
     },

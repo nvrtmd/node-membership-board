@@ -9,15 +9,11 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       post_title: {
-        type: DataTypes.STRING(200),
+        type: DataTypes.STRING,
         allowNull: false,
       },
-      post_content: {
-        type: DataTypes.TEXT,
-        allowNull: true,
-      },
-      post_views: {
-        type: DataTypes.INTEGER,
+      post_contents: {
+        type: DataTypes.STRING,
         allowNull: false,
       },
       post_display: {
@@ -28,6 +24,7 @@ module.exports = (sequelize, DataTypes) => {
       post_register_date: {
         type: DataTypes.DATE,
         allowNull: false,
+        comment: "게시글 등록 일시",
       },
     },
     {

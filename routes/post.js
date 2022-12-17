@@ -19,8 +19,7 @@ router.get("/list", async (req, res) => {
  * 게시글 생성
  */
 router.post("/create", isSignedIn, async (req, res) => {
-  const token = req.headers.cookie.split("=")[1];
-  const signedinId = jwt.decode(token).memberId;
+  const signedinId = jwt.decode(res.locals.token).memberId;
 
   const writerId = await Member.findOne({
     where: { member_id: signedinId },

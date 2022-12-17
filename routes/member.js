@@ -49,4 +49,33 @@ router.get("/posts", isSignedIn, async (req, res) => {
   });
 });
 
+/**
+ * 회원 탈퇴
+ */
+router.delete("/delete", isSignedIn, async (req, res) => {
+  const signedinMemberInfo = await Member.findOne({
+    where: { member_id: jwt.decode(res.locals.token).memberId },
+  });
+
+  if (signedinMemberInfo) {
+    await Member.destroy({
+      where: { member_idx: signedinMemberInfo.member_idx },
+    });
+    res.setHeader(
+      "Set-Cookie",
+      `token=${res.locals.token}; Path=/; HttpOnly; SameSite=none; secure=true; Max-Age=0`
+    );
+
+    return res.status(200).json({
+      code: 200,
+      message: "create account successfully.",
+    });
+  } else {
+    return res.status(404).json({
+      code: 404,
+      message: "cannot find account. please retry.",
+    });
+  }
+});
+
 module.exports = router;

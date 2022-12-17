@@ -36,3 +36,15 @@ exports.isCorrectPassword = async (req, res, next) => {
     });
   }
 };
+
+exports.isSignedIn = async (req, res, next) => {
+  try {
+    const token = req.headers.cookie.split("=")[1];
+    next();
+  } catch {
+    return res.status(401).json({
+      code: 401,
+      message: "unauthorized user. Need to sign in.",
+    });
+  }
+};

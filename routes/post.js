@@ -32,6 +32,10 @@ router.post("/create", isSignedIn, async (req, res) => {
   };
 
   await Post.create(postData);
+  return res.status(201).json({
+    code: 201,
+    message: "create post successfully.",
+  });
 });
 
 module.exports = router;

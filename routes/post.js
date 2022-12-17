@@ -21,14 +21,14 @@ router.get("/list", async (req, res) => {
 router.post("/create", isSignedIn, async (req, res) => {
   const signedinId = jwt.decode(res.locals.token).memberId;
 
-  const writerId = await Member.findOne({
+  const writerData = await Member.findOne({
     where: { member_id: signedinId },
   });
 
   const postData = {
     post_title: req.body.title,
     post_contents: req.body.contents,
-    memberId: writerId.id,
+    member_idx: writerData.member_idx,
   };
 
   await Post.create(postData);

@@ -5,6 +5,8 @@ const cors = require("cors");
 require("dotenv").config();
 const sequelize = require("./models/index.js").sequelize;
 
+const memberRouter = require("./routes/member");
+
 const app = express();
 
 app.use(logger("dev"));
@@ -23,8 +25,7 @@ app.use(
     credentials: true,
   })
 );
-// app.listen(3000, () => {
-//   console.log("Server listening on port 3000");
-// });
+
+app.use("/member", memberRouter);
 
 module.exports = app;

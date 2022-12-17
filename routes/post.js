@@ -9,7 +9,7 @@ const { Member, Post } = require("../models/index");
  */
 router.get("/list", async (req, res) => {
   const postList = await Post.findAll();
-  res.status(200).json({
+  return res.status(200).json({
     code: 200,
     data: postList,
   });

@@ -16,7 +16,7 @@ router.get("/info", isSignedIn, async (req, res) => {
     attributes: ["member_id", "member_nickname"],
   });
 
-  res.status(200).json({
+  return res.status(200).json({
     code: 200,
     data: signedinMemberInfo,
   });
@@ -43,7 +43,7 @@ router.get("/posts", isSignedIn, async (req, res) => {
     ],
   });
 
-  res.status(200).json({
+  return res.status(200).json({
     code: 200,
     data: posts,
   });

@@ -46,7 +46,7 @@ router.post(
       `token=${token}; Path=/; HttpOnly; SameSite=none; secure=true;`
     );
 
-    res.status(201).json({
+    return res.status(201).json({
       code: 201,
       message: "signed in successfully.",
     });

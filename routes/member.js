@@ -37,7 +37,7 @@ router.get("/posts", isSignedIn, async (req, res) => {
     include: [
       {
         model: Member,
-        as: "writer",
+        as: "post_writer",
         attributes: ["member_id", "member_nickname"],
       },
     ],

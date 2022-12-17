@@ -1,8 +1,13 @@
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define("member", {
+    member_idx: {
+      type: DataTypes.INTEGER,
+      unique: true,
+      primaryKey: true,
+      allowNull: false,
+    },
     member_id: {
       type: DataTypes.STRING(100),
-      unique: true,
       allowNull: false,
     },
     member_password: {

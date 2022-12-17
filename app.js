@@ -26,6 +26,6 @@ app.use(
   })
 );
 
-app.use("/member", memberRouter);
+// app.use("/member", memberRouter);
 
 module.exports = app;

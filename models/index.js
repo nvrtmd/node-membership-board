@@ -8,7 +8,6 @@ const config = require(path.join(__dirname, "..", "config", "database.js"))[
   env
 ];
 
-
 const sequelize = new Sequelize(
   config.database,
   config.username,
@@ -20,11 +19,10 @@ const db = {
   sequelize,
   Sequelize,
   Post: Post(sequelize, Sequelize),
-  Member: Member(sequelize, Sequelize)
+  Member: Member(sequelize, Sequelize),
 };
 
-
 db.Member.hasMany(db.Post);
-db.Post.belongsTo(db.Member);
+db.Post.belongsTo(db.Member, { as: "writer" });
 
 module.exports = db;

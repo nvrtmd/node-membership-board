@@ -5,7 +5,7 @@ const cors = require("cors");
 require("dotenv").config();
 const sequelize = require("./models/index.js").sequelize;
 
-const memberRouter = require("./routes/member");
+const authRouter = require("./routes/auth");
 const postRouter = require("./routes/post");
 
 const app = express();
@@ -27,7 +27,7 @@ app.use(
   })
 );
 
-app.use("/member", memberRouter);
+app.use("/auth", authRouter);
 app.use("/post", postRouter);
 
 module.exports = app;

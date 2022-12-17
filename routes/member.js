@@ -13,7 +13,7 @@ router.post("/signup", async (req, res, next) => {
   const encodedPassword = await bcrypt.hash(req.body.password, 12);
   const newMemberData = {
     member_id: req.body.id,
-    member_name: req.body.name,
+    member_nickname: req.body.nickname,
     member_password: encodedPassword,
   };
   await Member.create(newMemberData);

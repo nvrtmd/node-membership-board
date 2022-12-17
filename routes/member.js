@@ -8,12 +8,11 @@ const { Member, Post } = require("../models/index");
  * 회원 정보 조회
  */
 router.get("/info", isSignedIn, async (req, res) => {
-  const token = req.headers.cookie.split("=")[1];
   const signedinMember = await Member.findOne({
-    where: { member_id: jwt.decode(token).memberId },
+    where: { member_id: jwt.decode(res.locals.token).memberId },
   });
 
-  const signedinMemberInfo = await Member.findByPk(signedinMember.id, {
+  const signedinMemberInfo = await Member.findByPk(signedinMember.member_idx, {
     attributes: ["member_id", "member_nickname"],
   });
 
@@ -27,9 +26,8 @@ router.get("/info", isSignedIn, async (req, res) => {
  * 회원 게시글 조회
  */
 router.get("/posts", isSignedIn, async (req, res) => {
-  const token = req.headers.cookie.split("=")[1];
   const signedinMemberInfo = await Member.findOne({
-    where: { member_id: jwt.decode(token).memberId },
+    where: { member_id: jwt.decode(res.locals.token).memberId },
   });
 
   const posts = await await Post.findAll({

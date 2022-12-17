@@ -22,7 +22,13 @@ const db = {
   Member: Member(sequelize, Sequelize),
 };
 
-db.Member.hasMany(db.Post);
-db.Post.belongsTo(db.Member, { as: "writer" });
+db.Member.hasMany(db.Post, {
+  foreignKey: "member_idx",
+  onDelete: "cascade",
+});
+db.Post.belongsTo(db.Member, {
+  foreignKey: "member_idx",
+  as: "post_writer",
+});
 
 module.exports = db;

@@ -10,13 +10,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      memberId: {
-        type: DataTypes.INTEGER,
-        references: {
-          model: "members",
-          key: "id",
-        },
-      },
     },
     {
       timestamps: true,

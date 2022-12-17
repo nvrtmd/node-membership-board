@@ -40,8 +40,19 @@ exports.isCorrectPassword = async (req, res, next) => {
 exports.isSignedIn = async (req, res, next) => {
   try {
     const token = req.headers.cookie.split("=")[1];
-    next();
+    try {
+      const verifiedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
+      next();
+      console.log(2);
+    } catch {
+      console.log(3);
+      return res.status(401).json({
+        code: 401,
+        message: "unauthorized user. Need to sign in.",
+      });
+    }
   } catch {
+    console.log(5);
     return res.status(401).json({
       code: 401,
       message: "unauthorized user. Need to sign in.",

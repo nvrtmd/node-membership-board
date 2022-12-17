@@ -6,6 +6,7 @@ require("dotenv").config();
 const sequelize = require("./models/index.js").sequelize;
 
 const memberRouter = require("./routes/member");
+const postRouter = require("./routes/post");
 
 const app = express();
 
@@ -27,5 +28,6 @@ app.use(
 );
 
 app.use("/member", memberRouter);
+app.use("/post", postRouter);
 
 module.exports = app;

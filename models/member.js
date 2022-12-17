@@ -1,7 +1,8 @@
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define("member", {
     member_idx: {
-      type: DataTypes.UUID,
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
       allowNull: false,
       primaryKey: true,
     },

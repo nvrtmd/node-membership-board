@@ -5,6 +5,7 @@ module.exports = (sequelize, DataTypes) => {
       unique: true,
       primaryKey: true,
       allowNull: false,
+      autoIncrement: true,
     },
     member_id: {
       type: DataTypes.STRING(100),

@@ -57,11 +57,9 @@ router.post(
  * 로그아웃
  */
 router.get("/signout", isSignedIn, async (req, res, next) => {
-  const token = req.headers.cookie.split("=")[1];
-
   res.setHeader(
     "Set-Cookie",
-    `token=${token}; Path=/; HttpOnly; SameSite=none; secure=true; Max-Age=0`
+    `token=${res.locals.token}; Path=/; HttpOnly; SameSite=none; secure=true; Max-Age=0`
   );
 
   return res.status(200).json({

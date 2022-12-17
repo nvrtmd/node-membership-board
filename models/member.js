@@ -1,12 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define("member", {
-    member_idx: {
-      type: DataTypes.INTEGER,
-      unique: true,
-      primaryKey: true,
-      allowNull: false,
-      autoIncrement: true,
-    },
     member_id: {
       type: DataTypes.STRING(100),
       allowNull: false,
@@ -15,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(100),
       allowNull: false,
     },
-    member_name: {
+    member_nickname: {
       type: DataTypes.STRING(100),
       allowNull: false,
     },

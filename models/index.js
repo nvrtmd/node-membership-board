@@ -1,11 +1,13 @@
 const Sequelize = require("sequelize");
 const path = require("path");
 const env = process.env.NODE_ENV || "development";
+const Post = require("./post");
+const Member = require("./member");
+
 const config = require(path.join(__dirname, "..", "config", "database.js"))[
   env
 ];
 
-const db = {};
 
 const sequelize = new Sequelize(
   config.database,
@@ -14,11 +16,13 @@ const sequelize = new Sequelize(
   config
 );
 
-db.sequelize = sequelize;
-db.Sequelize = Sequelize;
+const db = {
+  sequelize,
+  Sequelize,
+  Post: Post(sequelize, Sequelize),
+  Member: Member(sequelize, Sequelize)
+};
 
-db.Post = require("./post")(sequelize, Sequelize);
-db.Member = require("./member")(sequelize, Sequelize);
 
 db.Member.hasMany(db.Post);
 db.Post.belongsTo(db.Member);

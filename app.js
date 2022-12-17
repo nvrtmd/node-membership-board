@@ -7,6 +7,7 @@ const sequelize = require("./models/index.js").sequelize;
 
 const authRouter = require("./routes/auth");
 const postRouter = require("./routes/post");
+const memberRouter = require("./routes/member");
 
 const app = express();
 
@@ -29,5 +30,6 @@ app.use(
 
 app.use("/auth", authRouter);
 app.use("/post", postRouter);
+app.use("/member", memberRouter);
 
 module.exports = app;

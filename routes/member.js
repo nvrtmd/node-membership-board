@@ -30,9 +30,9 @@ router.get("/posts", isSignedIn, async (req, res) => {
     where: { member_id: jwt.decode(res.locals.token).memberId },
   });
 
-  const posts = await await Post.findAll({
+  const posts = await Post.findAll({
     where: {
-      memberId: signedinMemberInfo.id,
+      member_idx: signedinMemberInfo.member_idx,
     },
     include: [
       {

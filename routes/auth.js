@@ -11,12 +11,12 @@ const { Member } = require("../models/index");
  */
 router.post("/signup", async (req, res, next) => {
   const encodedPassword = await bcrypt.hash(req.body.password, 12);
-  const newMemberData = {
+  const newMember = {
     member_id: req.body.id,
     member_nickname: req.body.nickname,
     member_password: encodedPassword,
   };
-  await Member.create(newMemberData);
+  await Member.create(newMember);
 
   return res.status(201).json({
     code: 201,
@@ -32,11 +32,11 @@ router.post(
   isExistedId,
   isCorrectPassword,
   async (req, res, next) => {
-    const memberData = {
+    const memberId = {
       memberId: req.body.id,
     };
 
-    const token = jwt.sign(memberData, process.env.JWT_SECRET_KEY, {
+    const token = jwt.sign(memberId, process.env.JWT_SECRET_KEY, {
       expiresIn: process.env.JWT_EXPIRE_TIME,
       issuer: process.env.JWT_ISSUER,
     });

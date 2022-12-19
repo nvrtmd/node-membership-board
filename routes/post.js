@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { verify } = require("../modules/jwt");
-const { isSignedIn } = require("./middlewares");
+const { isSignedIn, isPostWriter } = require("./middlewares");
 const { Member, Post, Comment } = require("../models/index");
 
 /**
@@ -87,6 +87,42 @@ router.post("/create", isSignedIn, async (req, res) => {
     message: "create post successfully.",
   });
 });
+
+/**
+ * 게시글 삭제
+ */
+router.delete(
+  "/delete/:postIdx",
+  isSignedIn,
+  isPostWriter,
+  async (req, res) => {
+    const postIdx = req.params.postIdx;
+
+    const post = await Post.findOne({
+      where: { post_idx: postIdx },
+    });
+
+    if (post) {
+      await Post.destroy({
+        where: { post_idx: postIdx },
+      });
+      res.setHeader(
+        "Set-Cookie",
+        `token=${res.locals.token}; Path=/; HttpOnly; SameSite=none; secure=true; Max-Age=0`
+      );
+
+      return res.status(200).json({
+        code: 200,
+        message: "delete post successfully.",
+      });
+    } else {
+      return res.status(404).json({
+        code: 404,
+        message: "cannot find post. please retry.",
+      });
+    }
+  }
+);
 
 /**
  * 댓글 생성

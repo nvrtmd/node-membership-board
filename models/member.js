@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define(
+  const Member = sequelize.define(
     "member",
     {
       member_idx: {
@@ -23,8 +23,19 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     {
-      timestamps: true,
+      associate: (models) => {
+        Member.hasMany(models.Post, {
+          foreignKey: "member_idx",
+          onDelete: "cascade",
+        });
+      },
+    },
+    {
+      tableName: "members",
+      deletedAt: "deletedAt",
       paranoid: true,
+      timestamps: true,
     }
   );
+  return Member;
 };

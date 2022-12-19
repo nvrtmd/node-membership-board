@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define(
+  const Post = sequelize.define(
     "post",
     {
       post_title: {
@@ -12,8 +12,11 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     {
-      timestamps: true,
+      tableName: "posts",
+      deletedAt: "deletedAt",
       paranoid: true,
+      timestamps: true,
     }
   );
+  return Post;
 };

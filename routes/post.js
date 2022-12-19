@@ -89,6 +89,26 @@ router.post("/create", isSignedIn, async (req, res) => {
 });
 
 /**
+ * 게시글 수정
+ */
+router.post("/modify/:postIdx", isSignedIn, isPostWriter, async (req, res) => {
+  const postIdx = req.params.postIdx;
+  const postWriteIdx = verify(res.locals.token).member_idx;
+
+  const post = {
+    post_title: req.body.title,
+    post_contents: req.body.contents,
+    member_idx: postWriteIdx,
+  };
+
+  await Post.update(post, { where: { post_idx: postIdx } });
+  return res.status(201).json({
+    code: 201,
+    message: "modify post successfully.",
+  });
+});
+
+/**
  * 게시글 삭제
  */
 router.delete(

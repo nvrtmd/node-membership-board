@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const jwt = require("jsonwebtoken");
+const { verify } = require("../modules/jwt");
 const { isSignedIn } = require("./middlewares");
 const { Member, Post } = require("../models/index");
 
@@ -19,7 +19,7 @@ router.get("/list", async (req, res) => {
  * 게시글 생성
  */
 router.post("/create", isSignedIn, async (req, res) => {
-  const signedinId = jwt.decode(res.locals.token).memberId;
+  const signedinId = verify(res.locals.token).memberId;
 
   const writer = await Member.findOne({
     where: { member_id: signedinId },

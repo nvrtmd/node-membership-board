@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 
-exports.sign = async (payload) => {
+exports.sign = (payload) => {
   const signedToken = jwt.sign(payload, process.env.JWT_SECRET_KEY, {
     expiresIn: process.env.JWT_EXPIRE_TIME,
     issuer: process.env.JWT_ISSUER,
@@ -9,7 +9,7 @@ exports.sign = async (payload) => {
   return signedToken;
 };
 
-exports.verify = async (token) => {
+exports.verify = (token) => {
   let decoded;
   try {
     decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);

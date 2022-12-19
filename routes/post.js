@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { verify } = require("../modules/jwt");
-const { isSignedIn, isPostWriter } = require("./middlewares");
+const { isSignedIn, isPostWriter, isCommentWriter } = require("./middlewares");
 const { Member, Post, Comment } = require("../models/index");
 
 /**
@@ -40,7 +40,7 @@ router.get("/:postIdx", async (req, res) => {
       {
         model: Comment,
         as: "comments",
-        attributes: ["comment_contents"],
+        attributes: ["comment_idx", "comment_contents"],
         include: [
           {
             model: Member,
@@ -181,5 +181,35 @@ router.post("/:postIdx/comment", isSignedIn, async (req, res) => {
     message: "create comment successfully.",
   });
 });
+
+/**
+ * 댓글 삭제
+ */
+router.delete(
+  "/:postIdx/comment/:commentIdx",
+  isSignedIn,
+  isCommentWriter,
+  async (req, res) => {
+    const commentIdx = req.params.commentIdx;
+    const comment = await Comment.findOne({
+      where: { comment_idx: commentIdx },
+    });
+
+    if (comment) {
+      await Comment.destroy({
+        where: { comment_idx: commentIdx },
+      });
+      return res.status(200).json({
+        code: 200,
+        message: "delete comment successfully.",
+      });
+    } else {
+      return res.status(404).json({
+        code: 404,
+        message: "cannot find comment. please retry.",
+      });
+    }
+  }
+);
 
 module.exports = router;

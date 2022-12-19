@@ -30,7 +30,7 @@ router.get("/:postIdx", async (req, res) => {
   const postIdx = req.params.postIdx;
 
   const post = await Post.findOne(
-    { where: { post_id: postIdx } },
+    { where: { post_idx: postIdx } },
     {
       include: [
         {

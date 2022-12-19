@@ -23,14 +23,6 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     {
-      associate: (models) => {
-        Member.hasMany(models.Post, {
-          foreignKey: "member_idx",
-          onDelete: "cascade",
-        });
-      },
-    },
-    {
       tableName: "members",
       deletedAt: "deletedAt",
       paranoid: true,

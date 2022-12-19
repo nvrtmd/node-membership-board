@@ -26,7 +26,6 @@ const db = {
 
 db.Member.hasMany(db.Post, {
   foreignKey: "member_idx",
-  onDelete: "cascade",
 });
 db.Post.belongsTo(db.Member, {
   foreignKey: "member_idx",
@@ -35,7 +34,6 @@ db.Post.belongsTo(db.Member, {
 
 db.Member.hasMany(db.Comment, {
   foreignKey: "member_idx",
-  onDelete: "cascade",
 });
 db.Comment.belongsTo(db.Member, {
   foreignKey: "member_idx",

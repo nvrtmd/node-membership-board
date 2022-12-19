@@ -29,18 +29,22 @@ router.get("/list", async (req, res) => {
 router.get("/:postIdx", async (req, res) => {
   const postIdx = req.params.postIdx;
 
-  const post = await Post.findOne(
-    { where: { post_idx: postIdx } },
-    {
-      include: [
-        {
-          model: Member,
-          as: "post_writer",
-          attributes: ["member_id", "member_nickname"],
-        },
-      ],
-    }
-  );
+  const post = await Post.findOne({
+    where: { post_idx: postIdx },
+    include: [
+      {
+        model: Member,
+        as: "post_writer",
+        attributes: ["member_id", "member_nickname"],
+      },
+      {
+        model: Comment,
+        as: "comments",
+        attributes: ["comment_contents"],
+      },
+    ],
+  });
+
   if (post) {
     return res.status(200).json({
       code: 200,

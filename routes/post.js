@@ -100,12 +100,10 @@ router.post("/create", isSignedIn, async (req, res) => {
  */
 router.post("/modify/:postIdx", isSignedIn, isPostWriter, async (req, res) => {
   const postIdx = req.params.postIdx;
-  const postWriteIdx = verify(res.locals.token).member_idx;
 
   const post = {
     post_title: req.body.title,
     post_contents: req.body.contents,
-    member_idx: postWriteIdx,
   };
 
   try {

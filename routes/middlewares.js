@@ -4,10 +4,10 @@ const jwt = require("jsonwebtoken");
 const { Member } = require("../models");
 
 exports.isExistedId = async (req, res, next) => {
-  const memberData = await Member.findOne({
+  const accordMember = await Member.findOne({
     where: { member_id: req.body.id },
   });
-  if (memberData) {
+  if (accordMember) {
     return next();
   } else {
     return res.status(404).json({
@@ -18,13 +18,13 @@ exports.isExistedId = async (req, res, next) => {
 };
 
 exports.isCorrectPassword = async (req, res, next) => {
-  const memberData = await Member.findOne({
+  const accordMember = await Member.findOne({
     where: { member_id: req.body.id },
   });
 
   const isCorrectPassword = await bcrypt.compare(
     req.body.password,
-    memberData.member_password
+    accordMember.member_password
   );
 
   if (isCorrectPassword) {

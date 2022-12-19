@@ -21,17 +21,17 @@ router.get("/list", async (req, res) => {
 router.post("/create", isSignedIn, async (req, res) => {
   const signedinId = jwt.decode(res.locals.token).memberId;
 
-  const writerData = await Member.findOne({
+  const writer = await Member.findOne({
     where: { member_id: signedinId },
   });
 
-  const postData = {
+  const post = {
     post_title: req.body.title,
     post_contents: req.body.contents,
-    member_idx: writerData.member_idx,
+    member_idx: writer.member_idx,
   };
 
-  await Post.create(postData);
+  await Post.create(post);
   return res.status(201).json({
     code: 201,
     message: "create post successfully.",

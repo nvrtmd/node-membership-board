@@ -39,18 +39,19 @@ router.get("/:postIdx", async (req, res) => {
           attributes: ["member_id", "member_nickname"],
         },
       ],
-      include: [
-        {
-          model: Comment,
-          as: "comments",
-        },
-      ],
     }
   );
-  return res.status(200).json({
-    code: 200,
-    data: post,
-  });
+  if (post) {
+    return res.status(200).json({
+      code: 200,
+      data: post,
+    });
+  } else {
+    return res.status(200).json({
+      code: 404,
+      message: "post not found",
+    });
+  }
 });
 
 /**

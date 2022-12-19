@@ -57,3 +57,23 @@ exports.isSignedIn = async (req, res, next) => {
     });
   }
 };
+
+exports.isAdmin = async (req, res, next) => {
+  const token = req.headers.cookie.split("=")[1];
+  const signedInMemberId = jwt.decode(token).memberId;
+  const signedInMember = await Member.findOne({
+    where: { member_id: signedInMemberId },
+  });
+  const admin = await Member.findOne({ where: { member_id: "admin" } });
+
+  if (
+    signedInMemberId === "admin" &&
+    signedInMember.member_password === admin.member_password
+  ) {
+    return next();
+  }
+  return res.status(403).json({
+    code: 403,
+    message: "forbidden to access.",
+  });
+};

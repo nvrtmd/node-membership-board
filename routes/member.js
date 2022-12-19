@@ -1,13 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
-const { isSignedIn } = require("./middlewares");
+const { isSignedIn, isAdmin } = require("./middlewares");
 const { Member, Post } = require("../models/index");
 
 /**
  * 회원 목록 조회
  */
-router.get("/list", async (req, res) => {
+router.get("/list", isSignedIn, isAdmin, async (req, res) => {
   const memberList = await Member.findAll();
 
   return res.status(200).json({

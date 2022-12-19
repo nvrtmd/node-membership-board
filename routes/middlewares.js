@@ -1,6 +1,5 @@
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-
+const { verify } = require("../modules/jwt");
 const { Member } = require("../models");
 
 exports.isExistedId = async (req, res, next) => {
@@ -41,7 +40,7 @@ exports.isSignedIn = async (req, res, next) => {
   try {
     const token = req.headers.cookie.split("=")[1];
     try {
-      jwt.verify(token, process.env.JWT_SECRET_KEY);
+      verify(token, process.env.JWT_SECRET_KEY);
       res.locals.token = token;
       next();
     } catch {
@@ -60,7 +59,7 @@ exports.isSignedIn = async (req, res, next) => {
 
 exports.isAdmin = async (req, res, next) => {
   const token = req.headers.cookie.split("=")[1];
-  const signedInMemberId = jwt.decode(token).memberId;
+  const signedInMemberId = verify(token, process.env.JWT_SECRET_KEY).memberId;
   const signedInMember = await Member.findOne({
     where: { member_id: signedInMemberId },
   });

@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const jwt = require("jsonwebtoken");
+const { verify } = require("../modules/jwt");
 const { isSignedIn, isAdmin } = require("./middlewares");
 const { Member, Post } = require("../models/index");
 
@@ -21,7 +21,7 @@ router.get("/list", isSignedIn, isAdmin, async (req, res) => {
  */
 router.get("/info", isSignedIn, async (req, res) => {
   const signedinMember = await Member.findOne({
-    where: { member_id: jwt.decode(res.locals.token).memberId },
+    where: { member_id: verify(res.locals.token).memberId },
   });
 
   const signedinMemberInfo = await Member.findByPk(signedinMember.member_idx, {
@@ -39,7 +39,7 @@ router.get("/info", isSignedIn, async (req, res) => {
  */
 router.get("/posts", isSignedIn, async (req, res) => {
   const signedinMemberInfo = await Member.findOne({
-    where: { member_id: jwt.decode(res.locals.token).memberId },
+    where: { member_id: verify(res.locals.token).memberId },
   });
 
   const posts = await Post.findAll({
@@ -66,7 +66,7 @@ router.get("/posts", isSignedIn, async (req, res) => {
  */
 router.delete("/delete", isSignedIn, async (req, res) => {
   const signedinMemberInfo = await Member.findOne({
-    where: { member_id: jwt.decode(res.locals.token).memberId },
+    where: { member_id: verify(res.locals.token).memberId },
   });
 
   if (signedinMemberInfo) {

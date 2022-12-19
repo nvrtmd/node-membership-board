@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { verify } = require("../modules/jwt");
 const { isSignedIn } = require("./middlewares");
-const { Member, Post } = require("../models/index");
+const { Member, Post, Comment } = require("../models/index");
 
 /**
  * 게시글 목록 조회
@@ -20,6 +20,33 @@ router.get("/list", async (req, res) => {
   return res.status(200).json({
     code: 200,
     data: postList,
+  });
+});
+
+/**
+ * 단일 게시글 조회
+ */
+router.get("/:postIdx", async (req, res) => {
+  const postIdx = req.params.postIdx;
+
+  const post = await Post.findOne({
+    include: [
+      {
+        model: Member,
+        as: "post_writer",
+        attributes: ["member_id", "member_nickname"],
+      },
+    ],
+    include: [
+      {
+        model: Comment,
+        as: "comments",
+      },
+    ],
+  });
+  return res.status(200).json({
+    code: 200,
+    data: post,
   });
 });
 

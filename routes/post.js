@@ -64,14 +64,14 @@ router.get("/:postIdx", async (req, res) => {
 router.post("/create", isSignedIn, async (req, res) => {
   const signedinId = verify(res.locals.token).memberId;
 
-  const writer = await Member.findOne({
+  const postWriter = await Member.findOne({
     where: { member_id: signedinId },
   });
 
   const post = {
     post_title: req.body.title,
     post_contents: req.body.contents,
-    member_idx: writer.member_idx,
+    member_idx: postWriter.member_idx,
   };
 
   await Post.create(post);

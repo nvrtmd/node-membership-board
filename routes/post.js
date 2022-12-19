@@ -8,7 +8,15 @@ const { Member, Post } = require("../models/index");
  * 게시글 목록 조회
  */
 router.get("/list", async (req, res) => {
-  const postList = await Post.findAll();
+  const postList = await Post.findAll({
+    include: [
+      {
+        model: Member,
+        as: "post_writer",
+        attributes: ["member_id", "member_nickname"],
+      },
+    ],
+  });
   return res.status(200).json({
     code: 200,
     data: postList,

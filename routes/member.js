@@ -5,6 +5,18 @@ const { isSignedIn } = require("./middlewares");
 const { Member, Post } = require("../models/index");
 
 /**
+ * 회원 목록 조회
+ */
+router.get("/list", async (req, res) => {
+  const memberList = await Member.findAll();
+
+  return res.status(200).json({
+    code: 200,
+    data: memberList,
+  });
+});
+
+/**
  * 회원 정보 조회
  */
 router.get("/info", isSignedIn, async (req, res) => {

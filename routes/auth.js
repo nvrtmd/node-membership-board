@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
 const { isExistedId, isCorrectPassword, isSignedIn } = require("./middlewares");
+const { sign } = require("../modules/jwt");
 
 const { Member } = require("../models/index");
 
@@ -36,10 +36,7 @@ router.post(
       memberId: req.body.id,
     };
 
-    const token = jwt.sign(memberId, process.env.JWT_SECRET_KEY, {
-      expiresIn: process.env.JWT_EXPIRE_TIME,
-      issuer: process.env.JWT_ISSUER,
-    });
+    const token = sign(memberId);
 
     res.setHeader(
       "Set-Cookie",

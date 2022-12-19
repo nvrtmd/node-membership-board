@@ -84,23 +84,24 @@ router.post("/create", isSignedIn, async (req, res) => {
 /**
  * 댓글 생성
  */
-router.post("/:", isSignedIn, async (req, res) => {
+router.post("/:postIdx/comment", isSignedIn, async (req, res) => {
+  const postIdx = req.params.postIdx;
   const signedinId = verify(res.locals.token).memberId;
 
-  const writer = await Member.findOne({
+  const commentWriter = await Member.findOne({
     where: { member_id: signedinId },
   });
 
-  const post = {
-    post_title: req.body.title,
-    post_contents: req.body.contents,
-    member_idx: writer.member_idx,
+  const comment = {
+    comment_contents: req.body.contents,
+    member_idx: commentWriter.member_idx,
+    post_idx: postIdx,
   };
 
-  await Post.create(post);
+  await Comment.create(comment);
   return res.status(201).json({
     code: 201,
-    message: "create post successfully.",
+    message: "create comment successfully.",
   });
 });
 

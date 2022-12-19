@@ -1,6 +1,6 @@
 const bcrypt = require("bcryptjs");
 const { verify } = require("../modules/jwt");
-const { Member } = require("../models");
+const { Member, Post } = require("../models");
 
 exports.isExistedId = async (req, res, next) => {
   const accordMember = await Member.findOne({
@@ -68,6 +68,31 @@ exports.isAdmin = async (req, res, next) => {
   if (
     signedInMemberId === "admin" &&
     signedInMember.member_password === admin.member_password
+  ) {
+    return next();
+  }
+  return res.status(403).json({
+    code: 403,
+    message: "forbidden to access.",
+  });
+};
+
+exports.isPostWriter = async (req, res, next) => {
+  const postIdx = req.params.postIdx;
+  const token = req.headers.cookie.split("=")[1];
+  const signedInMemberId = verify(token, process.env.JWT_SECRET_KEY).memberId;
+  const signedInMember = await Member.findOne({
+    where: { member_id: signedInMemberId },
+  });
+  const post = await Post.findOne({ where: { post_idx: postIdx } });
+  const postWriterIdx = post.member_idx;
+  const postWriter = await Member.findOne({
+    where: { member_idx: postWriterIdx },
+  });
+
+  if (
+    signedInMemberId === postWriter.member_id &&
+    signedInMember.member_password === postWriter.member_password
   ) {
     return next();
   }

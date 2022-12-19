@@ -178,6 +178,35 @@ router.post("/:postIdx/comment", isSignedIn, async (req, res) => {
 });
 
 /**
+ * 댓글 수정
+ */
+router.post(
+  "/:postIdx/comment/:commentIdx",
+  isSignedIn,
+  isCommentWriter,
+  async (req, res) => {
+    const commentIdx = req.params.commentIdx;
+
+    const comment = {
+      comment_contents: req.body.contents,
+    };
+
+    try {
+      await Comment.update(comment, { where: { comment_idx: commentIdx } });
+      return res.status(201).json({
+        code: 201,
+        message: "modify comment successfully.",
+      });
+    } catch {
+      return res.status(500).json({
+        code: 500,
+        message: "internal server error. please retry.",
+      });
+    }
+  }
+);
+
+/**
  * 댓글 삭제
  */
 router.delete(

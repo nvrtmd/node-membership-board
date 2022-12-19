@@ -29,21 +29,24 @@ router.get("/list", async (req, res) => {
 router.get("/:postIdx", async (req, res) => {
   const postIdx = req.params.postIdx;
 
-  const post = await Post.findOne({
-    include: [
-      {
-        model: Member,
-        as: "post_writer",
-        attributes: ["member_id", "member_nickname"],
-      },
-    ],
-    include: [
-      {
-        model: Comment,
-        as: "comments",
-      },
-    ],
-  });
+  const post = await Post.findOne(
+    { where: { post_id: postIdx } },
+    {
+      include: [
+        {
+          model: Member,
+          as: "post_writer",
+          attributes: ["member_id", "member_nickname"],
+        },
+      ],
+      include: [
+        {
+          model: Comment,
+          as: "comments",
+        },
+      ],
+    }
+  );
   return res.status(200).json({
     code: 200,
     data: post,
@@ -54,6 +57,29 @@ router.get("/:postIdx", async (req, res) => {
  * 게시글 생성
  */
 router.post("/create", isSignedIn, async (req, res) => {
+  const signedinId = verify(res.locals.token).memberId;
+
+  const writer = await Member.findOne({
+    where: { member_id: signedinId },
+  });
+
+  const post = {
+    post_title: req.body.title,
+    post_contents: req.body.contents,
+    member_idx: writer.member_idx,
+  };
+
+  await Post.create(post);
+  return res.status(201).json({
+    code: 201,
+    message: "create post successfully.",
+  });
+});
+
+/**
+ * 댓글 생성
+ */
+router.post("/:", isSignedIn, async (req, res) => {
   const signedinId = verify(res.locals.token).memberId;
 
   const writer = await Member.findOne({

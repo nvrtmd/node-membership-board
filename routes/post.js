@@ -140,11 +140,6 @@ router.delete(
       await Post.destroy({
         where: { post_idx: postIdx },
       });
-      res.setHeader(
-        "Set-Cookie",
-        `token=${res.locals.token}; Path=/; HttpOnly; SameSite=none; secure=true; Max-Age=0`
-      );
-
       return res.status(200).json({
         code: 200,
         message: "delete post successfully.",

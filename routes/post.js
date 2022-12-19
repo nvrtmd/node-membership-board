@@ -81,11 +81,18 @@ router.post("/create", isSignedIn, async (req, res) => {
     member_idx: postWriter.member_idx,
   };
 
-  await Post.create(post);
-  return res.status(201).json({
-    code: 201,
-    message: "create post successfully.",
-  });
+  try {
+    await Post.create(post);
+    return res.status(201).json({
+      code: 201,
+      message: "create post successfully.",
+    });
+  } catch {
+    return res.status(500).json({
+      code: 500,
+      message: "internal server error. please retry.",
+    });
+  }
 });
 
 /**
@@ -101,11 +108,18 @@ router.post("/modify/:postIdx", isSignedIn, isPostWriter, async (req, res) => {
     member_idx: postWriteIdx,
   };
 
-  await Post.update(post, { where: { post_idx: postIdx } });
-  return res.status(201).json({
-    code: 201,
-    message: "modify post successfully.",
-  });
+  try {
+    await Post.update(post, { where: { post_idx: postIdx } });
+    return res.status(201).json({
+      code: 201,
+      message: "modify post successfully.",
+    });
+  } catch {
+    return res.status(500).json({
+      code: 500,
+      message: "internal server error. please retry.",
+    });
+  }
 });
 
 /**

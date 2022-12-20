@@ -68,7 +68,7 @@ router.get("/:postIdx", async (req, res) => {
 /**
  * 게시글 생성
  */
-router.post("/create", isSignedIn, async (req, res) => {
+router.post("/", isSignedIn, async (req, res) => {
   const signedinId = verify(res.locals.token).memberId;
 
   const postWriter = await Member.findOne({

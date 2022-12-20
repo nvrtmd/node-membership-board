@@ -98,7 +98,7 @@ router.post("/", isSignedIn, async (req, res) => {
 /**
  * 게시글 수정
  */
-router.post("/modify/:postIdx", isSignedIn, isPostWriter, async (req, res) => {
+router.patch("/:postIdx", isSignedIn, isPostWriter, async (req, res) => {
   const postIdx = req.params.postIdx;
 
   const post = {

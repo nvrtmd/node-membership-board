@@ -104,7 +104,7 @@ router.get("/posts", isSignedIn, async (req, res) => {
 /**
  * 회원 탈퇴
  */
-router.delete("/delete", isSignedIn, async (req, res) => {
+router.delete("/", isSignedIn, async (req, res) => {
   const signedinMemberInfo = await Member.findOne({
     where: { member_id: verify(res.locals.token).memberId },
   });

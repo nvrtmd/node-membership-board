@@ -195,7 +195,7 @@ router.post("/:postIdx/comment", isSignedIn, async (req, res) => {
 /**
  * 댓글 수정
  */
-router.post(
+router.patch(
   "/:postIdx/comment/:commentIdx",
   isSignedIn,
   isCommentWriter,

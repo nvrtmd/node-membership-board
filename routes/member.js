@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { verify } = require("../modules/jwt");
+const { sign, verify } = require("../modules/jwt");
 const { isSignedIn, isAdmin } = require("./middlewares");
 const { Member, Post } = require("../models/index");
 
@@ -32,6 +32,46 @@ router.get("/info", isSignedIn, async (req, res) => {
     code: 200,
     data: signedinMemberInfo,
   });
+});
+
+/**
+ * 회원 정보 수정
+ */
+router.patch("/info", isSignedIn, async (req, res) => {
+  const signedinMember = await Member.findOne({
+    where: { member_id: verify(res.locals.token).memberId },
+  });
+
+  const info = {
+    member_id: req.body.id,
+    member_nickname: req.body.nickname,
+  };
+
+  try {
+    await Member.update(info, {
+      where: { member_idx: signedinMember.member_idx },
+    });
+
+    const memberId = {
+      memberId: req.body.id,
+    };
+    const token = sign(memberId);
+
+    res.setHeader(
+      "Set-Cookie",
+      `token=${token}; Path=/; HttpOnly; SameSite=none; secure=true;`
+    );
+
+    return res.status(201).json({
+      code: 201,
+      message: "modify info successfully.",
+    });
+  } catch {
+    return res.status(500).json({
+      code: 500,
+      message: "internal server error. please retry.",
+    });
+  }
 });
 
 /**

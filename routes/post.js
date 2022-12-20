@@ -58,7 +58,7 @@ router.get("/:postIdx", async (req, res) => {
       data: post,
     });
   } else {
-    return res.status(200).json({
+    return res.status(404).json({
       code: 404,
       message: "post not found",
     });

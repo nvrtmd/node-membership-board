@@ -123,33 +123,28 @@ router.patch("/:postIdx", isSignedIn, isPostWriter, async (req, res) => {
 /**
  * 게시글 삭제
  */
-router.delete(
-  "/delete/:postIdx",
-  isSignedIn,
-  isPostWriter,
-  async (req, res) => {
-    const postIdx = req.params.postIdx;
+router.delete("/:postIdx", isSignedIn, isPostWriter, async (req, res) => {
+  const postIdx = req.params.postIdx;
 
-    const post = await Post.findOne({
+  const post = await Post.findOne({
+    where: { post_idx: postIdx },
+  });
+
+  if (post) {
+    await Post.destroy({
       where: { post_idx: postIdx },
     });
-
-    if (post) {
-      await Post.destroy({
-        where: { post_idx: postIdx },
-      });
-      return res.status(200).json({
-        code: 200,
-        message: "delete post successfully.",
-      });
-    } else {
-      return res.status(404).json({
-        code: 404,
-        message: "cannot find post. please retry.",
-      });
-    }
+    return res.status(200).json({
+      code: 200,
+      message: "delete post successfully.",
+    });
+  } else {
+    return res.status(404).json({
+      code: 404,
+      message: "cannot find post. please retry.",
+    });
   }
-);
+});
 
 /**
  * 특정 게시글 댓글 조회

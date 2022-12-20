@@ -152,6 +152,28 @@ router.delete(
 );
 
 /**
+ * 특정 게시글 댓글 조회
+ */
+router.get("/:postIdx/comment/list", async (req, res) => {
+  const postIdx = req.params.postIdx;
+
+  try {
+    const commentList = await Comment.findAll({
+      where: { post_idx: postIdx },
+    });
+    return res.status(200).json({
+      code: 200,
+      data: commentList,
+    });
+  } catch {
+    return res.status(500).json({
+      code: 500,
+      message: "internal server error. please retry.",
+    });
+  }
+});
+
+/**
  * 댓글 생성
  */
 router.post("/:postIdx/comment", isSignedIn, async (req, res) => {

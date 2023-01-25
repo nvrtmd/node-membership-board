@@ -20,7 +20,11 @@ sequelize.sync();
 
 app.use(
   cors({
-    origin: [process.env.FRONT_URL, "http://localhost:3000"],
+    origin: [
+      process.env.FRONT_URL,
+      "http://localhost:3000",
+      "http://localhost:3001",
+    ],
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     preflightContinue: false,
     optionsSuccessStatus: 204,

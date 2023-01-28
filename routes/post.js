@@ -40,7 +40,12 @@ router.get("/:postIdx", async (req, res) => {
       {
         model: Comment,
         as: "comments",
-        attributes: ["comment_idx", "comment_contents"],
+        attributes: [
+          "comment_idx",
+          "comment_contents",
+          "createdAt",
+          "updatedAt",
+        ],
         include: [
           {
             model: Member,

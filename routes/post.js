@@ -15,6 +15,16 @@ router.get("/list", async (req, res) => {
         as: "post_writer",
         attributes: ["member_id", "member_nickname"],
       },
+      {
+        model: Comment,
+        as: "comments",
+        attributes: [
+          "comment_idx",
+          "comment_contents",
+          "createdAt",
+          "updatedAt",
+        ],
+      },
     ],
   });
   return res.status(200).json({

@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
+const { StatusCodes, ReasonPhrases } = require("http-status-codes");
 const { isExistedId, isCorrectPassword, isSignedIn } = require("./middlewares");
 const { sign } = require("../modules/jwt");
 
@@ -10,18 +11,21 @@ const { Member } = require("../models/index");
  * 회원가입
  */
 router.post("/signup", async (req, res, next) => {
-  const encodedPassword = await bcrypt.hash(req.body.password, 12);
-  const newMember = {
-    member_id: req.body.id,
-    member_nickname: req.body.nickname,
-    member_password: encodedPassword,
-  };
-  await Member.create(newMember);
+  try {
+    const encodedPassword = await bcrypt.hash(req.body.password, 12);
+    const newMember = {
+      member_id: req.body.id,
+      member_nickname: req.body.nickname,
+      member_password: encodedPassword,
+    };
+    await Member.create(newMember);
 
-  return res.status(201).json({
-    code: 201,
-    message: "created successfully.",
-  });
+    return res.status(StatusCodes.CREATED).send(ReasonPhrases.CREATED);
+  } catch {
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .send(ReasonPhrases.INTERNAL_SERVER_ERROR);
+  }
 });
 
 /**
@@ -32,21 +36,21 @@ router.post(
   isExistedId,
   isCorrectPassword,
   async (req, res, next) => {
-    const memberId = {
-      memberId: req.body.id,
-    };
-
-    const token = sign(memberId);
-
-    res.setHeader(
-      "Set-Cookie",
-      `token=${token}; Path=/; HttpOnly; SameSite=none; secure=true;`
-    );
-
-    return res.status(201).json({
-      code: 201,
-      message: "signed in successfully.",
-    });
+    try {
+      const memberId = {
+        memberId: req.body.id,
+      };
+      const token = sign(memberId);
+      res.setHeader(
+        "Set-Cookie",
+        `token=${token}; Path=/; HttpOnly; SameSite=none; secure=true;`
+      );
+      return res.status(StatusCodes.OK).send(ReasonPhrases.OK);
+    } catch {
+      return res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .send(ReasonPhrases.INTERNAL_SERVER_ERROR);
+    }
   }
 );
 
@@ -54,15 +58,18 @@ router.post(
  * 로그아웃
  */
 router.get("/signout", isSignedIn, async (req, res, next) => {
-  res.setHeader(
-    "Set-Cookie",
-    `token=${res.locals.token}; Path=/; HttpOnly; SameSite=none; secure=true; Max-Age=0`
-  );
+  try {
+    res.setHeader(
+      "Set-Cookie",
+      `token=${res.locals.token}; Path=/; HttpOnly; SameSite=none; secure=true; Max-Age=0`
+    );
 
-  return res.status(200).json({
-    code: 200,
-    message: "signed out successfully.",
-  });
+    return res.status(StatusCodes.OK).send(ReasonPhrases.OK);
+  } catch {
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .send(ReasonPhrases.INTERNAL_SERVER_ERROR);
+  }
 });
 
 module.exports = router;

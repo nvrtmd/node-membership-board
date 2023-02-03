@@ -216,6 +216,18 @@ router.post("/:postIdx/comment", isSignedIn, async (req, res) => {
 });
 
 /**
+ * 댓글 수정 권한 확인
+ */
+router.get(
+  "/:postIdx/comment/:commentIdx/iswriter",
+  isSignedIn,
+  isCommentWriter,
+  (req, res) => {
+    return res.status(StatusCodes.OK).send(StatusCodes.OK);
+  }
+);
+
+/**
  * 댓글 수정
  */
 router.patch(

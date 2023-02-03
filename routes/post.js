@@ -115,6 +115,13 @@ router.post("/", isSignedIn, async (req, res) => {
 });
 
 /**
+ * 게시글 수정 권한 확인
+ */
+router.get("/:postIdx/iswriter", isSignedIn, isPostWriter, (req, res) => {
+  return res.status(StatusCodes.OK).send(StatusCodes.OK);
+});
+
+/**
  * 게시글 수정
  */
 router.patch("/:postIdx", isSignedIn, isPostWriter, async (req, res) => {

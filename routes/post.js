@@ -11,6 +11,7 @@ const { Member, Post, Comment } = require("../models/index");
 router.get("/list", async (req, res) => {
   try {
     const postList = await Post.findAll({
+      order: [["createdAt", "DESC"]],
       include: [
         {
           model: Member,

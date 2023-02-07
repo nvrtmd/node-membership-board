@@ -179,6 +179,7 @@ router.get("/:postIdx/comment/list", async (req, res) => {
 
     const commentList = await Comment.findAll({
       where: { post_idx: postIdx },
+      order: [["comment_idx", "DESC"]],
     });
     return res.status(StatusCodes.OK).json({
       data: commentList,

@@ -73,6 +73,7 @@ router.get("/:postIdx", async (req, res) => {
           ],
         },
       ],
+      order: [[Comment, "createdAt", "DESC"]],
     });
 
     if (post) {

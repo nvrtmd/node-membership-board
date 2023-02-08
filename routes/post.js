@@ -68,7 +68,7 @@ router.get("/:postIdx", async (req, res) => {
             {
               model: Member,
               as: "comment_writer",
-              attributes: ["member_id", "member_nickname"],
+              attributes: ["member_idx", "member_id", "member_nickname"],
             },
           ],
         },

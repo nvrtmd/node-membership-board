@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const Sequelize = require("sequelize");
 const { StatusCodes, ReasonPhrases } = require("http-status-codes");
 const { sign, verify } = require("../modules/jwt");
 const { isSignedIn, isAdmin } = require("./middlewares");

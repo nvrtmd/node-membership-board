@@ -35,7 +35,15 @@ router.get("/list", async (req, res) => {
       group: ["post_idx"],
     });
     return res.status(StatusCodes.OK).json({
-      data: postList,
+      data: postList.map((post) => {
+        return {
+          ...post.dataValues,
+          comments_count: post.dataValues.comments[0]
+            ? post.dataValues.comments[0].dataValues.comments_count
+            : 0,
+          comments: undefined,
+        };
+      }),
     });
   } catch {
     return res

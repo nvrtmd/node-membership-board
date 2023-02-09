@@ -9,6 +9,7 @@ const { Member, Post, Comment } = require("../models/index");
  * 게시글 목록 조회
  */
 router.get("/list", async (req, res) => {
+  const { start, count } = req.query;
   try {
     const postList = await Post.findAll({
       order: [["createdAt", "DESC"]],
@@ -29,6 +30,8 @@ router.get("/list", async (req, res) => {
           ],
         },
       ],
+      limit: count,
+      offset: start,
     });
     return res.status(StatusCodes.OK).json({
       data: postList,

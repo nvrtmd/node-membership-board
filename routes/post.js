@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const Sequelize = require("sequelize");
 const { StatusCodes, ReasonPhrases } = require("http-status-codes");
 const { verify } = require("../modules/jwt");
 const { isSignedIn, isPostWriter, isCommentWriter } = require("./middlewares");
@@ -11,52 +12,28 @@ const { Member, Post, Comment } = require("../models/index");
 router.get("/list", async (req, res) => {
   const { start, count } = req.query;
   try {
-    let postList;
-    if (start && count) {
-      postList = await Post.findAll({
-        order: [["createdAt", "DESC"]],
-        include: [
-          {
-            model: Member,
-            as: "post_writer",
-            attributes: ["member_id", "member_nickname"],
-          },
-          {
-            model: Comment,
-            as: "comments",
-            attributes: [
-              "comment_idx",
-              "comment_contents",
-              "createdAt",
-              "updatedAt",
+    const postList = await Post.findAll({
+      order: [["createdAt", "DESC"]],
+      include: [
+        {
+          model: Member,
+          as: "post_writer",
+          attributes: ["member_id", "member_nickname"],
+        },
+        {
+          model: Comment,
+          attributes: [
+            [
+              Sequelize.fn("COUNT", Sequelize.col("comment_idx")),
+              "comments_count",
             ],
-          },
-        ],
-        limit: Number(count),
-        offset: Number(start),
-      });
-    } else {
-      postList = await Post.findAll({
-        order: [["createdAt", "DESC"]],
-        include: [
-          {
-            model: Member,
-            as: "post_writer",
-            attributes: ["member_id", "member_nickname"],
-          },
-          {
-            model: Comment,
-            as: "comments",
-            attributes: [
-              "comment_idx",
-              "comment_contents",
-              "createdAt",
-              "updatedAt",
-            ],
-          },
-        ],
-      });
-    }
+          ],
+        },
+      ],
+      offset: start ? Number(start) : undefined,
+      limit: count ? Number(count) : undefined,
+      group: ["post_idx"],
+    });
     return res.status(StatusCodes.OK).json({
       data: postList,
     });

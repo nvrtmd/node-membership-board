@@ -30,8 +30,8 @@ router.get("/list", async (req, res) => {
           ],
         },
       ],
-      limit: count,
-      offset: start,
+      limit: Number(count),
+      offset: Number(start),
     });
     return res.status(StatusCodes.OK).json({
       data: postList,

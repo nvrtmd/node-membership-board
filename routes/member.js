@@ -3,7 +3,7 @@ const router = express.Router();
 const { StatusCodes, ReasonPhrases } = require("http-status-codes");
 const { sign, verify } = require("../modules/jwt");
 const { isSignedIn, isAdmin } = require("./middlewares");
-const { Member, Post } = require("../models/index");
+const { Member, Post, Comment } = require("../models/index");
 
 /**
  * 회원 목록 조회
@@ -86,6 +86,7 @@ router.patch("/info", isSignedIn, async (req, res) => {
  * 회원 게시글 조회
  */
 router.get("/posts", isSignedIn, async (req, res) => {
+  const { start, count } = req.query;
   try {
     const signedinMemberInfo = await Member.findOne({
       where: { member_id: verify(res.locals.token).memberId },
@@ -102,10 +103,30 @@ router.get("/posts", isSignedIn, async (req, res) => {
           as: "post_writer",
           attributes: ["member_id", "member_nickname"],
         },
+        {
+          model: Comment,
+          attributes: [
+            [
+              Sequelize.fn("COUNT", Sequelize.col("comment_idx")),
+              "comments_count",
+            ],
+          ],
+        },
       ],
+      offset: start ? Number(start) : undefined,
+      limit: count ? Number(count) : undefined,
+      group: ["post_idx"],
     });
     return res.status(StatusCodes.OK).json({
-      data: posts,
+      data: posts.map((post) => {
+        return {
+          ...post.dataValues,
+          comments_count: post.dataValues.comments[0]
+            ? post.dataValues.comments[0].dataValues.comments_count
+            : 0,
+          comments: undefined,
+        };
+      }),
     });
   } catch {
     return res

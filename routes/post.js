@@ -11,28 +11,35 @@ const { Member, Post, Comment } = require("../models/index");
 router.get("/list", async (req, res) => {
   const { start, count } = req.query;
   try {
-    const postList = await Post.findAll({
-      order: [["createdAt", "DESC"]],
-      include: [
-        {
-          model: Member,
-          as: "post_writer",
-          attributes: ["member_id", "member_nickname"],
-        },
-        {
-          model: Comment,
-          as: "comments",
-          attributes: [
-            "comment_idx",
-            "comment_contents",
-            "createdAt",
-            "updatedAt",
-          ],
-        },
-      ],
-      limit: Number(count),
-      offset: Number(start),
-    });
+    let postList;
+    if (start && count) {
+      postList = await Post.findAll({
+        order: [["createdAt", "DESC"]],
+        include: [
+          {
+            model: Member,
+            as: "post_writer",
+            attributes: ["member_id", "member_nickname"],
+          },
+          {
+            model: Comment,
+            as: "comments",
+            attributes: [
+              "comment_idx",
+              "comment_contents",
+              "createdAt",
+              "updatedAt",
+            ],
+          },
+        ],
+        limit: count,
+        offset: start,
+      });
+    } else {
+      postList = await Post.findAll({
+        order: [["createdAt", "DESC"]],
+      });
+    }
     return res.status(StatusCodes.OK).json({
       data: postList,
     });

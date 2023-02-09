@@ -92,6 +92,7 @@ router.get("/posts", isSignedIn, async (req, res) => {
     });
 
     const posts = await Post.findAll({
+      order: [["createdAt", "DESC"]],
       where: {
         member_idx: signedinMemberInfo.member_idx,
       },

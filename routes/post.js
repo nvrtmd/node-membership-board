@@ -32,12 +32,29 @@ router.get("/list", async (req, res) => {
             ],
           },
         ],
-        limit: count,
-        offset: start,
+        limit: Number(count),
+        offset: Number(start),
       });
     } else {
       postList = await Post.findAll({
         order: [["createdAt", "DESC"]],
+        include: [
+          {
+            model: Member,
+            as: "post_writer",
+            attributes: ["member_id", "member_nickname"],
+          },
+          {
+            model: Comment,
+            as: "comments",
+            attributes: [
+              "comment_idx",
+              "comment_contents",
+              "createdAt",
+              "updatedAt",
+            ],
+          },
+        ],
       });
     }
     return res.status(StatusCodes.OK).json({

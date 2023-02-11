@@ -32,6 +32,7 @@ router.get("/list", async (req, res) => {
       ],
       offset: start ? Number(start) : undefined,
       limit: count ? Number(count) : undefined,
+      subQuery: false,
       group: ["post_idx"],
     });
     return res.status(StatusCodes.OK).json({

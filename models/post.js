@@ -9,11 +9,11 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
       },
       post_title: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: false,
       },
       post_contents: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: false,
       },
     },

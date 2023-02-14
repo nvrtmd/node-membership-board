@@ -119,6 +119,7 @@ router.post("/", isSignedIn, async (req, res) => {
       post_contents: req.body.contents,
       member_idx: postWriter.member_idx,
     };
+    console.log(post);
 
     await Post.create(post);
     return res.status(StatusCodes.CREATED).send(ReasonPhrases.CREATED);

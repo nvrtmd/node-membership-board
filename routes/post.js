@@ -68,25 +68,25 @@ router.get("/:postIdx", async (req, res) => {
           as: "post_writer",
           attributes: ["member_id", "member_nickname"],
         },
-        {
-          model: Comment,
-          as: "comments",
-          attributes: [
-            "comment_idx",
-            "comment_contents",
-            "createdAt",
-            "updatedAt",
-          ],
-          include: [
-            {
-              model: Member,
-              as: "comment_writer",
-              attributes: ["member_idx", "member_id", "member_nickname"],
-            },
-          ],
-        },
+        // {
+        //   model: Comment,
+        //   as: "comments",
+        //   attributes: [
+        //     "comment_idx",
+        //     "comment_contents",
+        //     "createdAt",
+        //     "updatedAt",
+        //   ],
+        //   include: [
+        //     {
+        //       model: Member,
+        //       as: "comment_writer",
+        //       attributes: ["member_idx", "member_id", "member_nickname"],
+        //     },
+        //   ],
+        // },
       ],
-      order: [[Comment, "createdAt", "DESC"]],
+      // order: [[Comment, "createdAt", "DESC"]],
     });
 
     if (post) {
@@ -187,12 +187,22 @@ router.delete("/:postIdx", isSignedIn, isPostWriter, async (req, res) => {
  * 특정 게시글 댓글 조회
  */
 router.get("/:postIdx/comment/list", async (req, res) => {
+  const { start, count } = req.query;
   try {
     const postIdx = req.params.postIdx;
 
     const commentList = await Comment.findAll({
       where: { post_idx: postIdx },
-      order: [["comment_idx", "DESC"]],
+      order: [["createdAt", "DESC"]],
+      include: [
+        {
+          model: Member,
+          as: "comment_writer",
+          attributes: ["member_id", "member_nickname"],
+        },
+      ],
+      offset: start ? Number(start) : undefined,
+      limit: count ? Number(count) : undefined,
     });
     return res.status(StatusCodes.OK).json({
       data: commentList,

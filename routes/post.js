@@ -14,6 +14,14 @@ router.get("/list", async (req, res) => {
   try {
     const postList = await Post.findAll({
       order: [["createdAt", "DESC"]],
+      attributes: {
+        include: [
+          [
+            Sequelize.fn("COUNT", Sequelize.col("comments.comment_idx")),
+            "comments_count",
+          ],
+        ],
+      },
       include: [
         {
           model: Member,
@@ -22,12 +30,7 @@ router.get("/list", async (req, res) => {
         },
         {
           model: Comment,
-          attributes: [
-            [
-              Sequelize.fn("COUNT", Sequelize.col("comment_idx")),
-              "comments_count",
-            ],
-          ],
+          attributes: [],
         },
       ],
       offset: start ? Number(start) : undefined,
@@ -36,15 +39,7 @@ router.get("/list", async (req, res) => {
       group: ["post_idx"],
     });
     return res.status(StatusCodes.OK).json({
-      data: postList.map((post) => {
-        return {
-          ...post.dataValues,
-          comments_count: post.dataValues.comments[0]
-            ? post.dataValues.comments[0].dataValues.comments_count
-            : 0,
-          comments: undefined,
-        };
-      }),
+      data: postList,
     });
   } catch {
     return res
@@ -68,27 +63,8 @@ router.get("/:postIdx", async (req, res) => {
           as: "post_writer",
           attributes: ["member_id", "member_nickname"],
         },
-        // {
-        //   model: Comment,
-        //   as: "comments",
-        //   attributes: [
-        //     "comment_idx",
-        //     "comment_contents",
-        //     "createdAt",
-        //     "updatedAt",
-        //   ],
-        //   include: [
-        //     {
-        //       model: Member,
-        //       as: "comment_writer",
-        //       attributes: ["member_idx", "member_id", "member_nickname"],
-        //     },
-        //   ],
-        // },
       ],
-      // order: [[Comment, "createdAt", "DESC"]],
     });
-
     if (post) {
       return res.status(StatusCodes.OK).json({
         data: post,

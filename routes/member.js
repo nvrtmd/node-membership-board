@@ -117,8 +117,8 @@ router.get("/posts", isSignedIn, async (req, res) => {
           attributes: [],
         },
       ],
-      offset: start ? Number(start) : undefined,
-      limit: count ? Number(count) : undefined,
+      offset: start ? Number(start) : null,
+      limit: count ? Number(count) : null,
       subQuery: false,
       group: ["post_idx"],
     });

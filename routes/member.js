@@ -95,6 +95,14 @@ router.get("/posts", isSignedIn, async (req, res) => {
 
     const posts = await Post.findAll({
       order: [["createdAt", "DESC"]],
+      attributes: {
+        include: [
+          [
+            Sequelize.fn("COUNT", Sequelize.col("comments.comment_idx")),
+            "comments_count",
+          ],
+        ],
+      },
       where: {
         member_idx: signedinMemberInfo.member_idx,
       },
@@ -106,12 +114,7 @@ router.get("/posts", isSignedIn, async (req, res) => {
         },
         {
           model: Comment,
-          attributes: [
-            [
-              Sequelize.fn("COUNT", Sequelize.col("comment_idx")),
-              "comments_count",
-            ],
-          ],
+          attributes: [],
         },
       ],
       offset: start ? Number(start) : undefined,
@@ -120,15 +123,7 @@ router.get("/posts", isSignedIn, async (req, res) => {
       group: ["post_idx"],
     });
     return res.status(StatusCodes.OK).json({
-      data: posts.map((post) => {
-        return {
-          ...post.dataValues,
-          comments_count: post.dataValues.comments[0]
-            ? post.dataValues.comments[0].dataValues.comments_count
-            : 0,
-          comments: undefined,
-        };
-      }),
+      data: posts,
     });
   } catch {
     return res

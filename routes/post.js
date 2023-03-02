@@ -177,8 +177,8 @@ router.get("/:postIdx/comment/list", async (req, res) => {
           attributes: ["member_id", "member_nickname"],
         },
       ],
-      offset: start ? Number(start) : undefined,
-      limit: count ? Number(count) : undefined,
+      offset: start ? Number(start) : null,
+      limit: count ? Number(count) : null,
     });
     return res.status(StatusCodes.OK).json({
       data: commentList,

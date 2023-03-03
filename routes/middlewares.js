@@ -22,11 +22,18 @@ exports.isExistedId = async (req, res, next) => {
 
 exports.checkIdDuplication = async (req, res, next) => {
   try {
-    const token = req.headers.cookie.split("=")[1];
-    const signedInMemberId = verify(token, process.env.JWT_SECRET_KEY).memberId;
-    if (signedInMemberId === req.body.id) {
-      return next();
+    if (req.headers.cookie) {
+      // signed in user
+      const token = req.headers.cookie.split("=")[1];
+      const signedInMemberId = verify(
+        token,
+        process.env.JWT_SECRET_KEY
+      ).memberId;
+      if (signedInMemberId === req.body.id) {
+        return next();
+      }
     }
+
     const accordMember = await Member.findOne({
       where: { member_id: req.body.id },
     });

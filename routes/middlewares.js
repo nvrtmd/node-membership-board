@@ -20,6 +20,10 @@ exports.isExistedId = async (req, res, next) => {
 
 exports.isCorrectPassword = async (req, res, next) => {
   try {
+    if (!res.locals.isExistedId) {
+      return res.status(StatusCodes.NOT_FOUND).send(ReasonPhrases.NOT_FOUND);
+    }
+
     const accordMember = await Member.findOne({
       where: { member_id: req.body.id },
     });

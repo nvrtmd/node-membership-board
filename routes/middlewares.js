@@ -8,22 +8,11 @@ exports.isExistedId = async (req, res, next) => {
     const accordMember = await Member.findOne({
       where: { member_id: req.body.id },
     });
-
-    res.locals.isExistedId = accordMember ? true : false;
-    return next();
-  } catch {
-    return res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .send(ReasonPhrases.INTERNAL_SERVER_ERROR);
-  }
-};
-
-exports.checkIdDuplication = async (req, res, next) => {
-  try {
-    if (!res.locals.isExistedId) {
-      return res.status(StatusCodes.CONFLICT).send(ReasonPhrases.CONFLICT);
+    if (accordMember) {
+      return next();
+    } else {
+      return res.status(StatusCodes.NOT_FOUND).send(ReasonPhrases.NOT_FOUND);
     }
-    return next();
   } catch {
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)

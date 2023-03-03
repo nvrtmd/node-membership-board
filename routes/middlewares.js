@@ -8,11 +8,9 @@ exports.isExistedId = async (req, res, next) => {
     const accordMember = await Member.findOne({
       where: { member_id: req.body.id },
     });
-    if (accordMember) {
-      return next();
-    } else {
-      return res.status(StatusCodes.NOT_FOUND).send(ReasonPhrases.NOT_FOUND);
-    }
+
+    res.locals.isExistedId = accordMember ? true : false;
+    return next();
   } catch {
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)

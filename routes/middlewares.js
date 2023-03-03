@@ -20,6 +20,23 @@ exports.isExistedId = async (req, res, next) => {
   }
 };
 
+exports.checkIdDuplication = async (req, res, next) => {
+  try {
+    const accordMember = await Member.findOne({
+      where: { member_id: req.body.id },
+    });
+    if (accordMember) {
+      return res.status(StatusCodes.CONFLICT).send(ReasonPhrases.CONFLICT);
+    } else {
+      return next();
+    }
+  } catch {
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .send(ReasonPhrases.INTERNAL_SERVER_ERROR);
+  }
+};
+
 exports.isCorrectPassword = async (req, res, next) => {
   try {
     const accordMember = await Member.findOne({

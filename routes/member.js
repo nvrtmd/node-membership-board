@@ -3,7 +3,7 @@ const router = express.Router();
 const Sequelize = require("sequelize");
 const { StatusCodes, ReasonPhrases } = require("http-status-codes");
 const { sign, verify } = require("../modules/jwt");
-const { isSignedIn, isAdmin } = require("./middlewares");
+const { isSignedIn, isAdmin, checkIdDuplication } = require("./middlewares");
 const { Member, Post, Comment } = require("../models/index");
 
 /**
@@ -50,7 +50,7 @@ router.get("/info", isSignedIn, async (req, res) => {
 /**
  * 회원 정보 수정
  */
-router.patch("/info", isSignedIn, async (req, res) => {
+router.patch("/info", isSignedIn, checkIdDuplication, async (req, res) => {
   try {
     const signedinMember = await Member.findOne({
       where: { member_id: verify(res.locals.token).memberId },

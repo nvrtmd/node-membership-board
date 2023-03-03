@@ -2,7 +2,12 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const { StatusCodes, ReasonPhrases } = require("http-status-codes");
-const { isExistedId, isCorrectPassword, isSignedIn } = require("./middlewares");
+const {
+  isExistedId,
+  isCorrectPassword,
+  isSignedIn,
+  checkIdDuplication,
+} = require("./middlewares");
 const { sign } = require("../modules/jwt");
 
 const { Member } = require("../models/index");
@@ -10,7 +15,7 @@ const { Member } = require("../models/index");
 /**
  * 회원가입
  */
-router.post("/signup", async (req, res, next) => {
+router.post("/signup", checkIdDuplication, async (req, res, next) => {
   try {
     const encodedPassword = await bcrypt.hash(req.body.password, 12);
     const newMember = {

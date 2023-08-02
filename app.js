@@ -9,6 +9,8 @@ const authRouter = require("./routes/auth");
 const postRouter = require("./routes/post");
 const memberRouter = require("./routes/member");
 
+const testPostRouter = require("./routes/testPost");
+
 const app = express();
 
 app.use(logger("dev"));
@@ -35,5 +37,6 @@ app.use(
 app.use("/auth", authRouter);
 app.use("/post", postRouter);
 app.use("/member", memberRouter);
+app.use("/test/post", testPostRouter);
 
 module.exports = app;

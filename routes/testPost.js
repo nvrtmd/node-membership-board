@@ -33,7 +33,7 @@ router.get("/list", async (req, res) => {
           attributes: [],
         },
       ],
-      offset: start > 30 ? Number(start) : 31,
+      offset: start ? Number(start) : null,
       limit: count ? Number(count) : null,
       subQuery: false,
       group: ["post_idx"],

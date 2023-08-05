@@ -88,10 +88,8 @@ router.get("/:postIdx", async (req, res) => {
  */
 router.post("/", async (req, res) => {
   try {
-    const signedinId = verify(res.locals.token).memberId;
-
     const postWriter = await Member.findOne({
-      where: { member_id: signedinId },
+      where: { member_id: "user" },
     });
 
     const post = {
@@ -121,8 +119,6 @@ router.get("/:postIdx/iswriter", (req, res) => {
  */
 router.patch("/:postIdx", async (req, res) => {
   try {
-    const postIdx = req.params.postIdx;
-
     const post = {
       post_title: req.body.title,
       post_contents: req.body.contents,
@@ -203,10 +199,9 @@ router.get("/:postIdx/comment/list", async (req, res) => {
 router.post("/:postIdx/comment", async (req, res) => {
   try {
     const postIdx = req.params.postIdx;
-    const signedinId = verify(res.locals.token).memberId;
 
     const commentWriter = await Member.findOne({
-      where: { member_id: signedinId },
+      where: { member_id: "user" },
     });
 
     const comment = {

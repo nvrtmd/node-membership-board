@@ -119,6 +119,7 @@ router.get("/:postIdx/iswriter", (req, res) => {
  */
 router.patch("/:postIdx", async (req, res) => {
   try {
+    const postIdx = req.params.postIdx;
     const post = {
       post_title: req.body.title,
       post_contents: req.body.contents,

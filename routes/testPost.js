@@ -54,11 +54,6 @@ router.get("/list", async (req, res) => {
 router.get("/:postIdx", async (req, res) => {
   try {
     const postIdx = req.params.postIdx;
-
-    if (postIdx <= 30) {
-      return res.status(StatusCodes.NOT_FOUND).send(ReasonPhrases.NOT_FOUND);
-    }
-
     const post = await Post.findOne({
       where: { post_idx: postIdx },
       include: [

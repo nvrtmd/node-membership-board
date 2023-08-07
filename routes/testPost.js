@@ -162,10 +162,6 @@ router.get("/:postIdx/comment/list", async (req, res) => {
   const { start, count } = req.query;
   try {
     const postIdx = req.params.postIdx;
-    if (postIdx <= 30) {
-      return res.status(StatusCodes.NOT_FOUND).send(ReasonPhrases.NOT_FOUND);
-    }
-
     const commentList = await Comment.findAll({
       where: { post_idx: postIdx },
       order: [["createdAt", "DESC"]],
